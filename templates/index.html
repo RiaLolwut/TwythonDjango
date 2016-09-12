@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+	{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'twitter/style.css' %}" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
+		<title>Sqwee with Twitter</title>
+	</head>
+	
+	<body>
+		<div id="header-menu">
+		<a href="/twitter/"><img id="home" src="{% static 'twitter/home.png' %}"></a>
+		<h1 id="page-title">Sqwee with Twitter</h1>
+		<div id="navmenu">
+			<ul id="nav">
+				<li><a href="#">Tools</a>
+					<ul>
+						<li><a href="/twitter/">Home</a></li>
+						<li><a href="reach">Get post reach</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		</div>
+		<div id="index">
+		<div class="text-center" id="twitter-form">
+		<form id="followers" method="post" action="/twitter/">
+			{% csrf_token %}
+
+			{% for field in form.visible_fields %}<br>
+				{{ field.help_text }} <br>
+				@{{ field }} <br><br>
+			{% endfor %}
+			
+			<input type="submit" name="submit" value="Get Followers!"/>
+		</form></div>
+		<br><br>
+		<p class="text-center">Depending on the user's number of Followers, this may take a couple minutes....
+		<br>Or just time out completely.
+		<br>Can only make so many requests blah blah blah....</p>
+		</div>
+	</body>
+</html>

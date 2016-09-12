@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'twitter/style.css' %}" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="{% static 'twitter/showhidecontent.js' %}"></script>
+<script src="{% static 'twitter/stupidtable.js' %}"></script>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
+  <script>
+    $(function(){
+        $("#ftable").stupidtable();
+    });
+  </script>
+		<title>@{{ username }}'s Twitter Followers | Sqwee </title>
+	</head>
+	<body>
+	<div id="header-menu">
+		<a href="/twitter/"><img id="home" src="{% static 'twitter/home.png' %}"></a>
+		<h1 id="page-title">/ @{{ username }} has {{ num_users }} Followers</h1>
+				<p class="header-user"><strong>Try another Twitter user?</strong>
+			<div id="twitter-form" class="header-form">
+		<form id="followers" method="post" action="/twitter/">
+			{% csrf_token %}
+
+			{% for field in form.visible_fields %}
+				@{{ field }}
+			{% endfor %}
+			<button class="search" name="submit" type="submit" value=""><img src="{% static 'twitter/search-icon.png' %}"></button>
+
+		</form></div></p>
+			</div>
+		<div id="content">
+		{% if rows|length > 0 %}
+				<img class="center" id="user-pic" src="{{ user_pic }}">
+				<div id="shbutton1" class="text-center"><button class="show showhide">Show @{{ username }}'s info!</button></div>
+      <div id="user-info" class="center">
+         <p><strong>Name:</strong> {{ user_name }}<br>
+			<strong>Username:</strong> {{ user_username }}<br>
+			<strong>Profile description:</strong> {{ user_desc }}<br>
+			<strong>User ID:</strong> {{ user_id }}<br>
+			<strong>Age of account:</strong> {{ user_age }}<br>
+			<strong>Accounts they're following:</strong> {{ user_following }}<br>
+			<strong>Location:</strong> {{ user_location }}<br>
+			<strong>Last Tweet:</strong> {{ user_status }}<br>
+			</p>
+		 <div id="shbutton2">
+		 <button class="hide showhide">Hide @{{ username }}'s info!</button></div>
+		</div>
+		<p class="text-center">Generated {{ datestamp }}</p>
+		<div id="followers-table">
+		<table id="ftable" class="center">
+		<thead><tr>
+		<th data-sort="string">Name</th>
+		<th data-sort="string">Username (@)</th>
+		<th data-sort="int">User ID</th>
+		<th data-sort="string">Location</th>
+		<th data-sort="int"># of their Followers</th>
+		</tr></thead>
+		<tbody>
+		{% for n, u, i, l, f in rows %}
+			<tr>
+				<td>{{ n }}</td>
+				<td>{{ u }}</td>
+				<td>{{ i }}</td>
+				<td>{{ l }}</td>
+				<td>{{ f }}</td>
+			</tr>		
+		{% endfor %}
+		</tbody>
+		</table></div>
+		{% else %}
+		<h3 class="center">{{ error|linebreaksbr }}</h3>
+		<br><p class="text-center">Would you like to try a username that actually exists?</p>
+				<div id="twitter-form" class="text-center">
+		<form id="followers" method="post" action="/twitter/">
+			{% csrf_token %}
+
+			{% for field in form.visible_fields %}<br>
+				{{ field.help_text }} <br>
+				@{{ field }} <br><br>
+			{% endfor %}
+			
+			<input type="submit" name="submit" value="Get Followers!"/>
+		</form></div>
+		{% endif %}
+		</div>
+	</body>
+</html>
